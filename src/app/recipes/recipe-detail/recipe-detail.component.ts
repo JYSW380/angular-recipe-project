@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Recipe } from '../recipe-list/recipe.model';
-import { RecipeService } from '../recipe.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+
+import { Recipe } from '../recipe.model';
+import { RecipeService } from '../recipe.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -15,26 +16,30 @@ export class RecipeDetailComponent implements OnInit {
   constructor(private recipeService: RecipeService,
               private route: ActivatedRoute,
               private router: Router) {
-              
   }
 
   ngOnInit() {
-    this.route.params.subscribe((params: Params) => {
-      this.id = +params['id'];
-      this.recipe = this.recipeService.getRecipe(this.id);
-    });
+    this.route.params
+      .subscribe(
+        (params: Params) => {
+          this.id = +params['id'];
+          this.recipe = this.recipeService.getRecipe(this.id);
+        }
+      );
   }
 
-  onAddShoppingList(){
-    this.recipeService.addIngredientToShoppingList(this.recipe.ingredients);
+  onAddToShoppingList() {
+    this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients);
   }
 
-  onEditRecipe(){
-    //this is more straight forward way
+  onEditRecipe() {
     this.router.navigate(['edit'], {relativeTo: this.route});
+    // this.router.navigate(['../', this.id, 'edit'], {relativeTo: this.route});
+  }
 
-    //this is more complated way todo it '../' means go up one level
-    // this.router.navigate(['../', 'id', 'edit'], {relativeTo: this.route});
+  onDeleteRecipe() {
+    this.recipeService.deleteRecipe(this.id);
+    this.router.navigate(['/recipes']);
   }
 
 }
